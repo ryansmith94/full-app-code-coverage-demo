@@ -1,9 +1,9 @@
 ### Steps to Try
 
-1. Run `npm ci`
-1. Run `npm run build`
-1. Run `npm test`
-1. Run `npm run report`
+1. Run `npm ci` to install dependencies.
+1. Run `npm run build` to instrument the code with Istanbul.
+1. Run `npm test` to test the instrumented code.
+1. Run `npm run report` to output the test coverage report.
 
 ### Future Experiments
 
