@@ -5,7 +5,7 @@ const { writeFileSync } = require('fs');
 
 test('test 1', async () => {
   await openBrowser();
-  await goto('file:///Users/ryansmith/Documents/temp/coverage-experiment/dist/index.html');
+  await goto(`file://${process.cwd()}/dist/index.html`);
   const coverage = await evaluate(() => window.__coverage__);
   writeFileSync(`.nyc_output/${uuid.v4()}.json`, JSON.stringify(coverage));
   await closeBrowser();
@@ -13,7 +13,7 @@ test('test 1', async () => {
 
 test('test 2', async () => {
   await openBrowser();
-  await goto('file:///Users/ryansmith/Documents/temp/coverage-experiment/dist/index.html');
+  await goto(`file://${process.cwd()}/dist/index.html`);
   const coverage = await evaluate(() => {
     window.sayHello();
     return window.__coverage__;
