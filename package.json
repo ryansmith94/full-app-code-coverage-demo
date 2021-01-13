@@ -1,0 +1,32 @@
+{
+  "name": "coverage-experiment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "rm -rf .nyc_output/* && jest",
+    "start": "open dist/index.html",
+    "report": "nyc report",
+    "build": "rm -rf dist && npx parcel build src/index.html -d dist --public-url ./"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "babel-plugin-istanbul": "6.0.0",
+    "jest": "26.6.3",
+    "nyc": "15.1.0",
+    "parcel": "1.12.4",
+    "taiko": "1.1.2",
+    "uuid": "8.3.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "bail": 1
+  },
+  "babel": {
+    "plugins": [
+      "istanbul"
+    ]
+  }
+}
