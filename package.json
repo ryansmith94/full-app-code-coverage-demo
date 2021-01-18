@@ -5,9 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "rm -rf .nyc_output/* && jest",
-    "start": "open dist/index.html",
     "report": "nyc report",
-    "build": "rm -rf dist && npx parcel build src/index.html -d dist --public-url ./"
+    "cover": "npm test; npm run report",
+    "start": "node dist/api/api.js",
+    "build-api": "rm -rf dist/api && npx parcel build src/api/api.js -d dist/api --target node",
+    "build-ui": "rm -rf dist/ui && npx parcel build src/ui/ui.html -d dist/ui --public-url ./",
+    "build": "rm -rf dist && npm run build-api && npm run build-ui"
   },
   "author": "",
   "license": "ISC",
@@ -28,5 +31,8 @@
     "plugins": [
       "istanbul"
     ]
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
