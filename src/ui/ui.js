@@ -6,14 +6,3 @@ window.sayHello = async () => {
   const text = await res.text();
   return text;
 };
-
-window.collectUiCoverage = () => {
-  return window.__coverage__;
-}
-
-window.collectApiCoverage = async () => {
-  const res = await fetch('/coverage');
-  console.log(res.status);
-  const coverage = await res.json();
-  return coverage;
-}
