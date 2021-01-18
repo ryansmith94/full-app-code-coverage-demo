@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "rm -rf .nyc_output/* && jest",
+    "test": "rm -rf .nyc_output && mkdir .nyc_output && jest",
     "report": "nyc report",
     "cover": "npm test; npm run report",
     "start": "node dist/api/api.js",
