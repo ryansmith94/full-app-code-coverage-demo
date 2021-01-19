@@ -50,6 +50,7 @@ function startApp() {
       env: {
         EXPRESS_PORT: port
       },
+      wait_ready: true,
     }, (err, proc) => {
       if (err !== null && err !== undefined) {
         reject(err)
