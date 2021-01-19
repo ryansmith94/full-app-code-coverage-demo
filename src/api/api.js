@@ -1,9 +1,9 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = process.env.EXPRESS_PORT
 
 app.get('/coverage', (req, res) => {
-  res.json(global.__coverage__).send();
+  res.json(global.__coverage__).send()
 })
 
 app.get('/hello', (req, res) => {
