@@ -81,6 +81,7 @@ test('test 1', async () => {
   const appUrl = `http://localhost:${port}`
   const uiUrl = `${appUrl}/ui.html`
   await openBrowser()
+  await resizeWindow({ width: 800, height: 600 })
   await setViewPort({ width: 800, height: 600 })
   await goto(uiUrl)
   const image = await screenshot({ encoding: 'base64' })
@@ -95,6 +96,7 @@ test('test 2', async () => {
   const appUrl = `http://localhost:${port}`
   const uiUrl = `${appUrl}/ui.html`
   await openBrowser()
+  await resizeWindow({ width: 800, height: 600 })
   await setViewPort({ width: 800, height: 600 })
   await goto(uiUrl)
   const text = await evaluate(async () => {
