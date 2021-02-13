@@ -1,6 +1,6 @@
 const assert = require('assert')
 const { test } = require("@jest/globals")
-const { openBrowser, goto, closeBrowser, evaluate, screenshot } = require('taiko')
+const { openBrowser, goto, closeBrowser, evaluate, screenshot, resizeWindow, setViewPort } = require('taiko')
 const uuid = require('uuid')
 const { writeFileSync } = require('fs')
 const { default: fetch } = require('node-fetch')
@@ -80,9 +80,10 @@ test('test 1', async () => {
   const { processName, port } = await startApp()
   const appUrl = `http://localhost:${port}`
   const uiUrl = `${appUrl}/ui.html`
-  await openBrowser({ args: ['--window-size=800,600'] })
+  await openBrowser()
+  await setViewPort({ width: 800, height: 600 })
   await goto(uiUrl)
-  const image = await screenshot({ encoding: 'base64', fullPage: true })
+  const image = await screenshot({ encoding: 'base64' })
   await collectCoverage(appUrl)
   await closeBrowser()
   await stopApp(processName)
@@ -93,7 +94,8 @@ test('test 2', async () => {
   const { processName, port } = await startApp()
   const appUrl = `http://localhost:${port}`
   const uiUrl = `${appUrl}/ui.html`
-  await openBrowser({ args: ['--window-size=800,600'] })
+  await openBrowser()
+  await setViewPort({ width: 800, height: 600 })
   await goto(uiUrl)
   const text = await evaluate(async () => {
     return window.sayHello()
