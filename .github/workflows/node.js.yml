@@ -28,4 +28,9 @@ jobs:
     - run: npm ci
     - run: npm run build
     - run: npm test
+    - uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: snapshot-diffs
+        path: src/__image_snapshots__/__diff_output__/
     - run: npm run report
