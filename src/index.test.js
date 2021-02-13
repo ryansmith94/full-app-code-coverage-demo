@@ -1,10 +1,13 @@
 const assert = require('assert')
 const { test } = require("@jest/globals")
-const { openBrowser, goto, closeBrowser, evaluate } = require('taiko')
+const { openBrowser, goto, closeBrowser, evaluate, screenshot } = require('taiko')
 const uuid = require('uuid')
 const { writeFileSync } = require('fs')
 const { default: fetch } = require('node-fetch')
 const pm2 = require('pm2')
+const { toMatchImageSnapshot } = require('jest-image-snapshot')
+
+expect.extend({ toMatchImageSnapshot })
 
 async function collectUiCoverage() {
   const coverage = await evaluate(() => window.__coverage__)
@@ -79,6 +82,8 @@ test('test 1', async () => {
   const uiUrl = `${appUrl}/ui.html`
   await openBrowser()
   await goto(uiUrl)
+  const image = await screenshot({ encoding: 'base64' })
+  expect(image).toMatchImageSnapshot()
   await collectCoverage(appUrl)
   await closeBrowser()
   await stopApp(processName)
