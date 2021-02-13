@@ -80,26 +80,26 @@ test('test 1', async () => {
   const { processName, port } = await startApp()
   const appUrl = `http://localhost:${port}`
   const uiUrl = `${appUrl}/ui.html`
-  await openBrowser({ args: ['--window-size=1440,900'] })
+  await openBrowser({ args: ['--window-size=800,600'] })
   await goto(uiUrl)
-  const image = await screenshot({ encoding: 'base64' })
-  expect(image).toMatchImageSnapshot()
+  const image = await screenshot({ encoding: 'base64', fullPage: true })
   await collectCoverage(appUrl)
   await closeBrowser()
   await stopApp(processName)
+  expect(image).toMatchImageSnapshot()
 })
 
 test('test 2', async () => {
   const { processName, port } = await startApp()
   const appUrl = `http://localhost:${port}`
   const uiUrl = `${appUrl}/ui.html`
-  await openBrowser({ args: ['--window-size=1440,900'] })
+  await openBrowser({ args: ['--window-size=800,600'] })
   await goto(uiUrl)
   const text = await evaluate(async () => {
     return window.sayHello()
   })
-  assert.strictEqual(text, 'Hello World!')
   await collectCoverage(appUrl)
   await closeBrowser()
   await stopApp(processName)
+  assert.strictEqual(text, 'Hello World!')
 })
