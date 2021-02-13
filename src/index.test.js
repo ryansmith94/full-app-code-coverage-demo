@@ -80,7 +80,7 @@ test('test 1', async () => {
   const { processName, port } = await startApp()
   const appUrl = `http://localhost:${port}`
   const uiUrl = `${appUrl}/ui.html`
-  await openBrowser()
+  await openBrowser({ args: ['--window-size=1440,900'] })
   await goto(uiUrl)
   const image = await screenshot({ encoding: 'base64' })
   expect(image).toMatchImageSnapshot()
@@ -93,7 +93,7 @@ test('test 2', async () => {
   const { processName, port } = await startApp()
   const appUrl = `http://localhost:${port}`
   const uiUrl = `${appUrl}/ui.html`
-  await openBrowser()
+  await openBrowser({ args: ['--window-size=1440,900'] })
   await goto(uiUrl)
   const text = await evaluate(async () => {
     return window.sayHello()
