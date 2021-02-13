@@ -88,7 +88,11 @@ test('test 1', async () => {
   await collectCoverage(appUrl)
   await closeBrowser()
   await stopApp(processName)
-  expect(image).toMatchImageSnapshot()
+  expect(image).toMatchImageSnapshot({
+    comparisonMethod: 'ssim',
+    failureThreshold: 0.01,
+    failureThresholdType: 'percent',
+  })
 })
 
 test('test 2', async () => {
