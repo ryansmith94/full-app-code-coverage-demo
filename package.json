@@ -26,8 +26,8 @@
     "node-fetch": "2.6.1",
     "nyc": "15.1.0",
     "parcel": "1.12.4",
+    "playwright": "1.8.1",
     "pm2": "4.5.1",
-    "taiko": "1.2.0",
     "uuid": "8.3.2"
   },
   "nyc": {
@@ -37,7 +37,7 @@
   "jest": {
     "testEnvironment": "node",
     "bail": 1,
-    "testTimeout": 6000
+    "testTimeout": 10000
   },
   "babel": {
     "plugins": [

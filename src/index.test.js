@@ -1,6 +1,6 @@
 const assert = require('assert')
 const { test } = require("@jest/globals")
-const { openBrowser, goto, closeBrowser, evaluate, screenshot, resizeWindow, setViewPort } = require('taiko')
+const { chromium, webkit, firefox, Page } = require('playwright')
 const uuid = require('uuid')
 const { writeFileSync } = require('fs')
 const { default: fetch } = require('node-fetch')
@@ -9,19 +9,45 @@ const { toMatchImageSnapshot } = require('jest-image-snapshot')
 
 expect.extend({ toMatchImageSnapshot })
 
-async function collectUiCoverage() {
-  const coverage = await evaluate(() => window.__coverage__)
+/**
+ * @param {string} appUrl 
+ */
+async function launchUi(appUrl) {
+  const browserApps = { chromium, webkit, firefox }
+  const browserApp = browserApps['chromium']
+  const uiUrl = `${appUrl}/ui.html`
+  const browser = await browserApp.launch()
+  const context = await browser.newContext({
+    viewport: { width: 800, height: 600 }
+  })
+  const page = await context.newPage()
+  await page.goto(uiUrl)
+  return { page, browser }
+}
+
+/**
+ * @param {Page} page 
+ */
+async function collectUiCoverage(page) {
+  const coverage = await page.evaluate(() => window.__coverage__)
   writeFileSync(`.nyc_output/${uuid.v4()}.json`, JSON.stringify(coverage))
 }
 
+/**
+ * @param {string} appUrl 
+ */
 async function collectApiCoverage(appUrl) {
   const res = await fetch(`${appUrl}/coverage`)
   const coverage = await res.json()
   writeFileSync(`.nyc_output/${uuid.v4()}.json`, JSON.stringify(coverage))
 }
 
-async function collectCoverage(appUrl) {
-  await Promise.all([collectApiCoverage(appUrl), collectUiCoverage()])
+/**
+ * @param {string} appUrl 
+ * @param {Page} page 
+ */
+async function collectCoverage(appUrl, page) {
+  await Promise.all([collectApiCoverage(appUrl), collectUiCoverage(page)])
 }
 
 beforeAll(async () => {
@@ -79,16 +105,12 @@ async function stopApp(processName) {
 test('test 1', async () => {
   const { processName, port } = await startApp()
   const appUrl = `http://localhost:${port}`
-  const uiUrl = `${appUrl}/ui.html`
-  await openBrowser()
-  await resizeWindow({ width: 800, height: 600 })
-  await setViewPort({ width: 800, height: 600 })
-  await goto(uiUrl)
-  const image = await screenshot({ encoding: 'base64' })
-  await collectCoverage(appUrl)
-  await closeBrowser()
+  const { browser, page } = await launchUi(appUrl)
+  const image = await page.screenshot()
+  await collectCoverage(appUrl, page)
+  await browser.close()
   await stopApp(processName)
-  expect(image).toMatchImageSnapshot({
+  expect(image.toString('base64')).toMatchImageSnapshot({
     comparisonMethod: 'ssim',
     failureThreshold: 0.001,
     failureThresholdType: 'percent',
@@ -98,16 +120,12 @@ test('test 1', async () => {
 test('test 2', async () => {
   const { processName, port } = await startApp()
   const appUrl = `http://localhost:${port}`
-  const uiUrl = `${appUrl}/ui.html`
-  await openBrowser()
-  await resizeWindow({ width: 800, height: 600 })
-  await setViewPort({ width: 800, height: 600 })
-  await goto(uiUrl)
-  const text = await evaluate(async () => {
+  const { browser, page } = await launchUi(appUrl)
+  const text = await page.evaluate(async () => {
     return window.sayHello()
   })
-  await collectCoverage(appUrl)
-  await closeBrowser()
+  await collectCoverage(appUrl, page)
+  await browser.close()
   await stopApp(processName)
   assert.strictEqual(text, 'Hello World!')
 })
