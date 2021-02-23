@@ -114,6 +114,7 @@ test('test 1', async () => {
     comparisonMethod: 'ssim',
     failureThreshold: 0.001,
     failureThresholdType: 'percent',
+    blur: 2,
   })
 })
 

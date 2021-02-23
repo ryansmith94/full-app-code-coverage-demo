@@ -7,7 +7,7 @@
     "test": "rm -rf .nyc_output && mkdir .nyc_output && jest",
     "report": "nyc report",
     "cover": "npm test; npm run report",
-    "start": "pm2 start dist/api/api.js",
+    "start": "EXPRESS_PORT=3000 pm2 start dist/api/api.js",
     "stop": "pm2 delete dist/api/api.js",
     "build-api": "rm -rf dist/api && npx parcel build src/api/api.js -d dist/api --target node",
     "build-ui": "rm -rf dist/ui && npx parcel build src/ui/ui.html -d dist/ui --public-url ./",
