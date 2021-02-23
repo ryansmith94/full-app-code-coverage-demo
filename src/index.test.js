@@ -14,7 +14,7 @@ expect.extend({ toMatchImageSnapshot })
  */
 async function launchUi(appUrl) {
   const browserApps = { chromium, webkit, firefox }
-  const browserApp = browserApps[process.env.BROWSER ?? 'chromium']
+  const browserApp = browserApps[process.env.BROWSER || 'chromium']
   const uiUrl = `${appUrl}/ui.html`
   const browser = await browserApp.launch()
   const context = await browser.newContext({
