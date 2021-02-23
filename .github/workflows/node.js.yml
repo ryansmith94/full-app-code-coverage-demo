@@ -5,32 +5,34 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [12.x]
+        browser: [chromium, webkit, firefox]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build
-    - run: npm test
-    - uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: snapshot-diffs
-        path: src/__image_snapshots__/__diff_output__/
-    - run: npm run report
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run build
+      - run: BROWSER=chromium npm test
+      - run: BROWSER=webkit npm test
+      - run: BROWSER=firefox npm test
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: snapshot-diffs
+          path: src/__image_snapshots__/__diff_output__/
+      - run: npm run report
