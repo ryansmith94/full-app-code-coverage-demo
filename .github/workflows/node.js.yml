@@ -27,9 +27,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run build
-      - run: BROWSER=chromium npm test
-      - run: BROWSER=webkit npm test
-      - run: BROWSER=firefox npm test
+      - run: BROWSER=${{ matrix.browser }} npm test
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
