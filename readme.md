@@ -11,3 +11,8 @@ This repository demonstrates how you can determine the code coverage of an entir
 ### Notes
 
 If you have background processes like processes that subscribe to queues, you can acquire the coverage by [sending signals to the process](https://pm2.keymetrics.io/docs/usage/pm2-api/#send-message-to-process).
+
+### Next Experiments
+
+- Using [codecov](https://codecov.io/) to merge coverage across jobs.
+- Emulating devices.
