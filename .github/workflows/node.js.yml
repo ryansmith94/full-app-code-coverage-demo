@@ -11,12 +11,22 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        node-version: [12.x]
-        browser: [chromium, webkit, firefox]
+        include:
+          os: ubuntu-latest
+          node-version: 12.x
+          browser: chromium
+        include:
+          os: ubuntu-latest
+          node-version: 12.x
+          browser: firefox
+        include:
+          os: macos-latest
+          node-version: 12.x
+          browser: webkit
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -27,7 +37,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run build
-      - run: BROWSER=${{ matrix.browser }} npm test
+      - name: Test
+        run: npm test
+        env:
+          BROWSER: ${{ matrix.browser }}
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
