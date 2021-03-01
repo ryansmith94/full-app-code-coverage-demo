@@ -14,20 +14,18 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
       matrix:
         include:
-          os: ubuntu-latest
-          node-version: 12.x
-          browser: chromium
-        include:
-          os: ubuntu-latest
-          node-version: 12.x
-          browser: firefox
-        include:
-          os: macos-latest
-          node-version: 12.x
-          browser: webkit
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+          - os: ubuntu-latest
+            node-version: 12.x
+            browser: chromium
+          - os: ubuntu-latest
+            node-version: 12.x
+            browser: firefox
+          - os: macos-latest
+            node-version: 12.x
+            browser: webkit
 
     steps:
       - uses: actions/checkout@v2
