@@ -1,5 +1,6 @@
 # Full App Code Coverage Demo
-This repository demonstrates how you can determine the code coverage of an entire NodeJS application (UI and API) using NYC and Istanbul. The output from the Github Actions shows that the tests pass and that 100% of the code is covered by the tests. Note that image snapshot testing has also been included to help find cosmetic bugs.
+
+This repository demonstrates how you can determine the code coverage of an entire NodeJS application (UI and API) using NYC and Istanbul. The output from the Github Actions shows that the tests pass and that 100% of the code is covered by the tests. Note that image snapshot testing has also been included across Browsers and Operating Systems using Playwright to help find cosmetic bugs.
 
 ### Steps to Try
 
