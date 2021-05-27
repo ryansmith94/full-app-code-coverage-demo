@@ -1,5 +1,5 @@
-import "core-js/shim"; // included < Stage 4 proposals
-import "regenerator-runtime/runtime";
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 
 window.sayHello = async () => {
   const res = await fetch('/hello');
