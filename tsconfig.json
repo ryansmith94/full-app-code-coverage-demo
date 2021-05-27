@@ -1,38 +1,10 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "jsx": "react",
     "target": "es5",
-    "rootDir": "src",
-    "outDir": "dist",
-    "lib": [
-      "ES2015",
-      "es2016",
-      "dom"
-    ],
-    "sourceMap": true,
-    "declaration": false,
+    "module": "commonjs",
     "strict": true,
-    "preserveConstEnums": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": false,
     "esModuleInterop": true,
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true
-  },
-  "exclude": [
-    "node_modules",
-    "dist/**/*"
-  ],
-  "compileOnSave": false
+    "skipLibCheck": true,                           /* Skip type checking of declaration files. */
+    "forceConsistentCasingInFileNames": true        /* Disallow inconsistently-cased references to the same file. */
+  }
 }
