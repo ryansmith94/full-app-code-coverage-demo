@@ -4,11 +4,7 @@ const app = express();
 const port = process.env.EXPRESS_PORT;
 
 app.get('/coverage', (req, res) => {
-  if (port === process.env.EXPRESS_PORT) {
-    res.json((global as any).__coverage__).send();
-  } else {
-    res.sendStatus(500);
-  }
+  res.json((global as any).__coverage__).send();
 });
 
 app.get('/hello', (req, res) => {
