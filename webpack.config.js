@@ -2,7 +2,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/api/api.ts',
   devtool: 'inline-source-map',
   module: {
     rules: [
@@ -29,6 +28,5 @@ module.exports = {
   },
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist', 'api'),
   },
 };
