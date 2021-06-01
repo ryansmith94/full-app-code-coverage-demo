@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "es6",
+    "target": "es5",
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node"
+  }
+}
