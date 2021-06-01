@@ -24,8 +24,8 @@ async function launchUi(appUrl: string) {
 }
 
 async function collectUiCoverage(page: Page) {
-  const coverage = await page.evaluate(`window.__coverage__`);
-  writeFileSync(`.nyc_output/${uuid.v4()}.json`, JSON.stringify(coverage));
+  // const coverage = await page.evaluate(`window.__coverage__`);
+  // writeFileSync(`.nyc_output/${uuid.v4()}.json`, JSON.stringify(coverage));
 }
 
 async function collectApiCoverage(appUrl: string) {
@@ -98,8 +98,9 @@ test('test 1', async () => {
   const appUrl = `http://localhost:${port}`;
   const { browser, page } = await launchUi(appUrl);
   const image = await page.screenshot();
-  await collectCoverage(appUrl, page);
+  await page.close({ runBeforeUnload: true });
   await browser.close();
+  await collectCoverage(appUrl, page);
   await stopApp(processName);
   expect(image.toString('base64')).toMatchImageSnapshot({
     comparisonMethod: 'ssim',
@@ -116,8 +117,9 @@ test('test 2', async () => {
   const text = await page.evaluate(`(async () => {
     return window.sayHello();
   })()`);
-  await collectCoverage(appUrl, page);
+  await page.close({ runBeforeUnload: true });
   await browser.close();
+  await collectCoverage(appUrl, page);
   await stopApp(processName);
   assert.strictEqual(text, 'Hello World!');
 });
