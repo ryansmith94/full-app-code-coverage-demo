@@ -1,20 +1,18 @@
-const assert = require('assert');
-const { test } = require('@jest/globals');
-const { chromium, webkit, firefox, Page } = require('playwright');
-const uuid = require('uuid');
-const { writeFileSync } = require('fs');
-const { default: fetch } = require('node-fetch');
-const pm2 = require('pm2');
-const { toMatchImageSnapshot } = require('jest-image-snapshot');
+import assert from 'assert';
+import { test } from '@jest/globals';
+import { chromium, webkit, firefox, Page } from 'playwright';
+import * as uuid from 'uuid';
+import { writeFileSync } from 'fs';
+import fetch from 'node-fetch';
+import pm2 from 'pm2';
+import { toMatchImageSnapshot } from 'jest-image-snapshot';
 
 expect.extend({ toMatchImageSnapshot });
 
-/**
- * @param {string} appUrl
- */
-async function launchUi(appUrl) {
+async function launchUi(appUrl: string) {
   const browserApps = { chromium, webkit, firefox };
-  const browserApp = browserApps[process.env.BROWSER || 'chromium'];
+  const browserEnv = process.env.BROWSER as 'chromium' | 'webkit' | 'firefox' | undefined;
+  const browserApp = browserApps[browserEnv ?? 'chromium'];
   const uiUrl = `${appUrl}/index.html`;
   const browser = await browserApp.launch();
   const context = await browser.newContext({
@@ -25,38 +23,28 @@ async function launchUi(appUrl) {
   return { page, browser };
 }
 
-/**
- * @param {Page} page
- */
-async function collectUiCoverage(page) {
-  const coverage = await page.evaluate(() => window.__coverage__);
+async function collectUiCoverage(page: Page) {
+  const coverage = await page.evaluate(`window.__coverage__`);
   writeFileSync(`.nyc_output/${uuid.v4()}.json`, JSON.stringify(coverage));
 }
 
-/**
- * @param {string} appUrl
- */
-async function collectApiCoverage(appUrl) {
+async function collectApiCoverage(appUrl: string) {
   const res = await fetch(`${appUrl}/coverage`);
   const coverage = await res.json();
   writeFileSync(`.nyc_output/${uuid.v4()}.json`, JSON.stringify(coverage));
 }
 
-/**
- * @param {string} appUrl
- * @param {Page} page
- */
-async function collectCoverage(appUrl, page) {
+async function collectCoverage(appUrl: string, page: Page) {
   await Promise.all([collectApiCoverage(appUrl), collectUiCoverage(page)]);
 }
 
 beforeAll(async () => {
-  return new Promise((resolve, reject) => {
+  return new Promise<null>((resolve, reject) => {
     pm2.connect((err) => {
       if (err !== null && err !== undefined) {
         reject(err);
       } else {
-        resolve();
+        resolve(null);
       }
     });
   });
@@ -70,7 +58,7 @@ let instance = 0;
 const maxInstances = 100;
 function startApp() {
   const processName = uuid.v4();
-  return new Promise((resolve, reject) => {
+  return new Promise<{ processName: string; port: number }>((resolve, reject) => {
     instance += 1;
     const port = 3000 + (instance % maxInstances);
     pm2.start(
@@ -78,7 +66,7 @@ function startApp() {
         name: processName,
         script: `${process.cwd()}/dist/api/bundle.js`,
         env: {
-          EXPRESS_PORT: port,
+          EXPRESS_PORT: `${port}`,
         },
         wait_ready: true,
       },
@@ -93,13 +81,13 @@ function startApp() {
   });
 }
 
-async function stopApp(processName) {
-  return new Promise((resolve, reject) => {
+async function stopApp(processName: string) {
+  return new Promise<null>((resolve, reject) => {
     pm2.delete(processName, (err) => {
       if (err !== null && err !== undefined) {
         reject(err);
       } else {
-        resolve();
+        resolve(null);
       }
     });
   });
