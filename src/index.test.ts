@@ -20,22 +20,7 @@ async function launchUi(appUrl: string) {
   });
   const page = await context.newPage();
   await page.goto(uiUrl);
-  return { page, browser };
-}
-
-async function collectUiCoverage(page: Page) {
-  const coverage = await page.evaluate(`window.__coverage__`);
-  writeFileSync(`.nyc_output/${uuid.v4()}.json`, JSON.stringify(coverage));
-}
-
-async function collectApiCoverage(appUrl: string) {
-  const res = await fetch(`${appUrl}/coverage`);
-  const coverage = await res.json();
-  writeFileSync(`.nyc_output/${uuid.v4()}.json`, JSON.stringify(coverage));
-}
-
-async function collectCoverage(appUrl: string, page: Page) {
-  await Promise.all([collectApiCoverage(appUrl), collectUiCoverage(page)]);
+  return { page, browser, context };
 }
 
 beforeAll(async () => {
@@ -96,9 +81,10 @@ async function stopApp(processName: string) {
 test('test 1', async () => {
   const { processName, port } = await startApp();
   const appUrl = `http://localhost:${port}`;
-  const { browser, page } = await launchUi(appUrl);
+  const { browser, page, context } = await launchUi(appUrl);
   const image = await page.screenshot();
-  await collectCoverage(appUrl, page);
+  await page.close({ runBeforeUnload: true });
+  await context.close();
   await browser.close();
   await stopApp(processName);
   expect(image.toString('base64')).toMatchImageSnapshot({
@@ -112,11 +98,12 @@ test('test 1', async () => {
 test('test 2', async () => {
   const { processName, port } = await startApp();
   const appUrl = `http://localhost:${port}`;
-  const { browser, page } = await launchUi(appUrl);
+  const { browser, page, context } = await launchUi(appUrl);
   const text = await page.evaluate(`(async () => {
     return window.sayHello();
   })()`);
-  await collectCoverage(appUrl, page);
+  await page.close({ runBeforeUnload: true });
+  await context.close();
   await browser.close();
   await stopApp(processName);
   assert.strictEqual(text, 'Hello World!');
