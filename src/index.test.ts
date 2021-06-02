@@ -20,7 +20,7 @@ async function launchUi(appUrl: string) {
   });
   const page = await context.newPage();
   await page.goto(uiUrl);
-  return { page, browser };
+  return { page, browser, context };
 }
 
 beforeAll(async () => {
@@ -81,9 +81,10 @@ async function stopApp(processName: string) {
 test('test 1', async () => {
   const { processName, port } = await startApp();
   const appUrl = `http://localhost:${port}`;
-  const { browser, page } = await launchUi(appUrl);
+  const { browser, page, context } = await launchUi(appUrl);
   const image = await page.screenshot();
   await page.close({ runBeforeUnload: true });
+  await context.close();
   await browser.close();
   await stopApp(processName);
   expect(image.toString('base64')).toMatchImageSnapshot({
@@ -97,11 +98,12 @@ test('test 1', async () => {
 test('test 2', async () => {
   const { processName, port } = await startApp();
   const appUrl = `http://localhost:${port}`;
-  const { browser, page } = await launchUi(appUrl);
+  const { browser, page, context } = await launchUi(appUrl);
   const text = await page.evaluate(`(async () => {
     return window.sayHello();
   })()`);
   await page.close({ runBeforeUnload: true });
+  await context.close();
   await browser.close();
   await stopApp(processName);
   assert.strictEqual(text, 'Hello World!');
