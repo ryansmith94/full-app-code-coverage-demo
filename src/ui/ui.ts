@@ -7,11 +7,7 @@ import 'regenerator-runtime/runtime';
   return text;
 };
 
-async function collectCoverage() {
+window.addEventListener('beforeunload', () => {
   const coverage = (window as any).__coverage__;
   navigator.sendBeacon('/coverage', JSON.stringify(coverage));
-}
-
-window.addEventListener('beforeunload', async () => {
-  collectCoverage();
 });

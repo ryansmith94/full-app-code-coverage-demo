@@ -23,21 +23,6 @@ async function launchUi(appUrl: string) {
   return { page, browser };
 }
 
-async function collectUiCoverage(page: Page) {
-  // const coverage = await page.evaluate(`window.__coverage__`);
-  // writeFileSync(`.nyc_output/${uuid.v4()}.json`, JSON.stringify(coverage));
-}
-
-async function collectApiCoverage(appUrl: string) {
-  const res = await fetch(`${appUrl}/coverage`);
-  const coverage = await res.json();
-  writeFileSync(`.nyc_output/${uuid.v4()}.json`, JSON.stringify(coverage));
-}
-
-async function collectCoverage(appUrl: string, page: Page) {
-  await Promise.all([collectApiCoverage(appUrl), collectUiCoverage(page)]);
-}
-
 beforeAll(async () => {
   return new Promise<null>((resolve, reject) => {
     pm2.connect((err) => {
@@ -100,7 +85,6 @@ test('test 1', async () => {
   const image = await page.screenshot();
   await page.close({ runBeforeUnload: true });
   await browser.close();
-  await collectCoverage(appUrl, page);
   await stopApp(processName);
   expect(image.toString('base64')).toMatchImageSnapshot({
     comparisonMethod: 'ssim',
@@ -119,7 +103,6 @@ test('test 2', async () => {
   })()`);
   await page.close({ runBeforeUnload: true });
   await browser.close();
-  await collectCoverage(appUrl, page);
   await stopApp(processName);
   assert.strictEqual(text, 'Hello World!');
 });
